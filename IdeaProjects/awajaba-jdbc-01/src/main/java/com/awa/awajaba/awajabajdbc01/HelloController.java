@@ -1,4 +1,4 @@
-package com.awa.awajaba.awajabajdbc01;
+/*package com.awa.awajaba.awajabajdbc01;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,4 +11,4 @@ public class HelloController {
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
-}
+}*/

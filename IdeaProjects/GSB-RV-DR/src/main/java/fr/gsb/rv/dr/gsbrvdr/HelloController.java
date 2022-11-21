@@ -1,4 +1,4 @@
-package com.awa.awajaba.awajabajdbc01;
+package fr.gsb.rv.dr.gsbrvdr;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

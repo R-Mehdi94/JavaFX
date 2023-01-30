@@ -19,6 +19,11 @@
 -- Table structure for table `ActiviteCompl`
 --
 
+drop database if exists gsbrv;
+create database gsbrv;
+
+use gsbrv;
+
 DROP TABLE IF EXISTS Motif;
 CREATE TABLE Motif (
     mot_num int(20) not null auto_increment,
@@ -299,7 +304,7 @@ CREATE TABLE `Offrir` (
   PRIMARY KEY (`vis_matricule`,`rap_num`,`med_depotlegal`),
   KEY `FK_OFFRIR_MEDICAMENT` (`med_depotlegal`),
   KEY `OFFRIR` (vis_matricule, rap_num),
-  CONSTRAINT `FK_OFFRIR_VISITEUR` FOREIGN KEY (`vis_matricule`,`rap_num`) REFERENCES `RapportVisiteur` (`vis_matricule`,`rap_num`),
+  CONSTRAINT `FK_OFFRIR_VISITEUR` FOREIGN KEY (`vis_matricule`,`rap_num`) REFERENCES `RapportVisite` (`vis_matricule`,`rap_num`),
   CONSTRAINT `FK_OFFRIR_MEDICAMENT` FOREIGN KEY (`med_depotlegal`) REFERENCES `Medicament` (`med_depotlegal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

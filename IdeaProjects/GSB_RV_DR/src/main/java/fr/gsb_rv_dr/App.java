@@ -28,10 +28,7 @@ import fr.gsb_rv_dr.vue.VueConnexion;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Observable;
-import java.util.Optional;
+import java.util.*;
 
 public class App extends Application {
 
@@ -50,15 +47,25 @@ public class App extends Application {
     }
 
     static class PanneauPraticiens extends Pane {
-        public static final int CRITERE_COEF_CONFIANCE = 1;
-        public static final int CRITERE_COEF_NOTORIETE = 2;
-        public static final int CRITERE_DATE_VISITE = 3;
 
-        private int critereTri = CRITERE_COEF_CONFIANCE;
+
+        private static final TableView<Praticien> tablePraticien = new TableView<>();
+
+        public static final ObservableList<Praticien> listPraticiens;
+
+        static {
+            try {
+                listPraticiens = rafraichir();
+            } catch (ConnexionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         private static final RadioButton rbCoefConfiance = new RadioButton();
         private static final RadioButton rbCoefNotoriete = new RadioButton();
         private static final RadioButton rbDateVisite = new RadioButton();
+
 
         public static void show(BorderPane PanneauPraticiens) throws ConnexionException {
 
@@ -100,7 +107,6 @@ public class App extends Application {
 
 
 
-            TableView<Praticien> tablePraticien = new TableView<>();
 
             TableColumn<Praticien,Integer> colNum = new TableColumn<Praticien,Integer>("Numéro :");
             TableColumn<Praticien,String> colNom = new TableColumn<Praticien,String>("Nom :");
@@ -122,11 +128,36 @@ public class App extends Application {
             vBoxPraticiens.getChildren().add(tablePraticien);
 
 
-            ObservableList<Praticien> test = rafraichir();
 
-            tablePraticien.setItems(test);
+            listPraticiens.sort(new ComparateurCoefConfiance());
+            tablePraticien.setItems(listPraticiens);
+
+
+
 
             vBoxPraticiens.setPadding(new Insets(10));
+
+
+
+            rbCoefConfiance.setOnAction((ActionEvent event) -> {
+                listPraticiens.sort(new ComparateurCoefConfiance());
+                tablePraticien.setItems(listPraticiens);
+            });
+
+
+            rbCoefNotoriete.setOnAction((ActionEvent event) -> {
+                listPraticiens.sort(new ComparateurCoefNotoriete());
+                tablePraticien.setItems(listPraticiens);
+            });
+
+
+            rbDateVisite.setOnAction((ActionEvent event) -> {
+                listPraticiens.sort(new ComparateurDateVisite());
+                Collections.reverse(listPraticiens);
+            });
+
+
+
 
             PanneauPraticiens.setCenter(vBoxPraticiens);
 
@@ -139,9 +170,6 @@ public class App extends Application {
         }
 
 
-        public void setCritereTri(int chiffre){
-            this.critereTri = chiffre;
-        }
 
     }
 
@@ -199,6 +227,7 @@ public class App extends Application {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
+                        PanneauPraticiens.listPraticiens.sort(new ComparateurCoefConfiance());
                         Session.fermer();
                         itemDeconnecter.setDisable(true);
                         menuRapport.setDisable(true);

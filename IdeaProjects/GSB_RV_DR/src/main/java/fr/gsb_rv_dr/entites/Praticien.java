@@ -11,6 +11,18 @@ public class Praticien {
     private LocalDate dateDerniereVisite;
     private int dernierCoefConfiance;
 
+    private String adresse;
+
+    private String codePostal;
+
+    private String prenom;
+
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+
 
     public Praticien(int numero, String nom, String ville, double coefNotoriete, LocalDate dateDerniereVisite, int dernierCoefConfiance) {
         this.numero = numero;
@@ -70,6 +82,16 @@ public class Praticien {
     public void setDernierCoefConfiance(int dernierCoefConfiance) {
         this.dernierCoefConfiance = dernierCoefConfiance;
     }
+
+    public void setAdresse(String adresse) {this.adresse = adresse;}
+
+    public String getCodePostal() {return codePostal;}
+
+    public void setCodePostal(String codePostal) {this.codePostal = codePostal;}
+
+    public String getPrenom() {return prenom;}
+
+    public void setPrenom(String prenom) {this.prenom = prenom;}
 
     @Override
     public String toString() {

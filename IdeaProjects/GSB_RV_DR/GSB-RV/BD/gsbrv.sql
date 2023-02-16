@@ -452,11 +452,13 @@ CREATE TABLE `RapportVisite` (
   `vis_matricule` varchar(20) NOT NULL DEFAULT '',
   `rap_num` int(11) NOT NULL DEFAULT '0',
   `rap_date_visite` date NOT NULL,
+  rap_date_redaction date NOT NULL,
   `rap_bilan` varchar(510) DEFAULT '',
   `pra_num` int(11) DEFAULT NULL,
    mot_num int(20) DEFAULT NULL,
   rap_autre_motif varchar(30) DEFAULT '',
   rap_coef_confiance int(2) DEFAULT NULL,
+  rap_lu boolean default false,
   PRIMARY KEY (`vis_matricule`,`rap_num`),
   KEY `FK_RAPPORT_VISITE_PRATICIEN` (`pra_num`),
   CONSTRAINT `FK_RAPPORT_VISITE_PRATICIEN` FOREIGN KEY (`pra_num`) REFERENCES `Praticien` (`pra_num`),
@@ -472,7 +474,7 @@ CREATE TABLE `RapportVisite` (
 
 LOCK TABLES `RapportVisite` WRITE;
 /*!40000 ALTER TABLE `RapportVisite` DISABLE KEYS */;
-INSERT INTO `RapportVisite` (vis_matricule, rap_num, rap_date_visite, pra_num, mot_num, rap_coef_confiance) VALUES ('a131',1,'2023/01/10',2,4,2),('a17',5,'2022/12/03',1,13,4),('a93',1,'2023/01/02',4,5,1),('a55',2,'2023/22/01',2,11,5);
+INSERT INTO `RapportVisite` (vis_matricule, rap_num, rap_date_visite,rap_date_redaction ,pra_num, mot_num, rap_coef_confiance) VALUES ('a131',1,'2023/01/10',"2023/01/15",2,4,2),('a17',5,'2022/12/03',"2023/01/02",1,13,4),('a93',1,'2023/01/02',"2023/01/04",4,5,1),('a55',2,'2023/01/22',"2023/02/1",2,11,5);
 /*!40000 ALTER TABLE `RapportVisite` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,5 +727,11 @@ UNLOCK TABLES;
 SELECT Visiteur.vis_matricule FROM Visiteur INNER JOIN Travailler ON Visiteur.vis_matricule = Travailler.vis_matricule WHERE tra_role LIKE "Délégué";
 SELECT Visiteur.vis_matricule FROM Visiteur INNER JOIN Travailler ON Visiteur.vis_matricule = Travailler.vis_matricule WHERE tra_role LIKE "Délégué" AND jjmmaa =  (SELECT max(jjmmaa) FROM Travailler where tra_role = "Délégué" ) ;
 SELECT Visiteur.vis_matricule, vis_nom, vis_prenom FROM Visiteur INNER JOIN Travailler ON Visiteur.vis_matricule = Travailler.vis_matricule WHERE tra_role LIKE "Délégué" AND jjmmaa =  (SELECT max(jjmmaa) FROM Travailler where tra_role = "Délégué" ) AND Visiteur.vis_matricule LIKE "p49" and vis_mdp LIKE "azerty"  ;
+
 SELECT RapportVisite.pra_num, Praticien.pra_nom, Praticien.pra_ville, Praticien.pra_coefnotoriete, RapportVisite.rap_date_visite, RapportVisite.rap_coef_confiance  FROM Praticien INNER JOIN RapportVisite ON RapportVisite.pra_num = Praticien.pra_num WHERE rap_coef_confiance < 5 ;
+
+SELECT vis_matricule ,vis_nom, vis_prenom FROM Visiteur;
+SELECT RapportVisite.vis_matricule, rap_num, rap_date_visite, rap_bilan, pra_num, mot_num, rap_autre_motif, rap_coef_confiance FROM RapportVisite INNER JOIN Visiteur ON RapportVisite.vis_matricule = Visiteur.vis_matricule WHERE RapportVisite.vis_matricule LIKE "a17" AND MONTH(rap_date_visite) = "12";
+UPDATE RapportVisite SET rap_lu = true where vis_matricule LIKE "a131";
+
 */

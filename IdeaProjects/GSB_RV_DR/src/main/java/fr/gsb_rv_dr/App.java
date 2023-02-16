@@ -1,6 +1,7 @@
 package fr.gsb_rv_dr;
 
 import fr.gsb_rv_dr.entites.Praticien;
+import fr.gsb_rv_dr.entites.RapportVisite;
 import fr.gsb_rv_dr.entites.Visiteur;
 import fr.gsb_rv_dr.modeles.ModeleGsbRv;
 import fr.gsb_rv_dr.technique.ConnexionBD;
@@ -40,6 +41,7 @@ public class App extends Application {
     }
 
     static class PanneauRapport{
+
         public static void show(BorderPane PanneauRapport) {
             String text = "Rapport";
             PanneauRapport.setCenter(new Label(text));
@@ -51,7 +53,7 @@ public class App extends Application {
 
         private static final TableView<Praticien> tablePraticien = new TableView<>();
 
-        public static final ObservableList<Praticien> listPraticiens;
+        public static ObservableList<Praticien> listPraticiens;
 
         static {
             try {
@@ -175,12 +177,15 @@ public class App extends Application {
 
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, ConnexionException {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root,650,500);
         stage.setTitle("GSB-RV");
         stage.setScene(scene);
         stage.show();
+
+        List<RapportVisite> a = ModeleGsbRv.getRapportVisite("a131","01");
+        System.out.println(a);
 
 
 
@@ -325,11 +330,7 @@ public class App extends Application {
                     @Override
                     public void handle(ActionEvent event) {
                         try {
-                            System.out.println(PanneauPraticiens.rafraichir());
-                        } catch (ConnexionException e) {
-                            throw new RuntimeException(e);
-                        }
-                        try {
+                            PanneauPraticiens.listPraticiens = PanneauPraticiens.rafraichir();
                             PanneauPraticiens.show(root);
                         } catch (ConnexionException e) {
                             throw new RuntimeException(e);
@@ -399,3 +400,5 @@ public class App extends Application {
         launch();
     }
 }
+
+

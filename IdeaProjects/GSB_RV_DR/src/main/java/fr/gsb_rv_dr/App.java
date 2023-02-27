@@ -73,7 +73,8 @@ public class App extends Application {
 
         public static void show(BorderPane PanneauRapport) throws ConnexionException {
 
-            if(cbVisiteur.getValue() == null){
+
+            if(cbVisiteur.getItems().isEmpty()){
                 List<Visiteur> listVisiteur = ModeleGsbRv.getVisiteurs();
                 cbVisiteur.setItems(FXCollections.observableList(listVisiteur));
 
@@ -498,11 +499,6 @@ public class App extends Application {
                 }
         );
 
-        /*else{
-                            System.out.println("bon");
-                            VueConnexionEchoue vueEchoue = new VueConnexionEchoue();
-                            vueEchoue.showAndWait();
-                        }*/
 
         itemQuitter.setOnAction(
                 new EventHandler<ActionEvent>() {

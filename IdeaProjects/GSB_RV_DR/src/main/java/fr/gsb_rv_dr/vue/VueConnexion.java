@@ -7,7 +7,6 @@ import javafx.util.Pair;
 
 public class VueConnexion extends Dialog<Pair<String,String>> {
 
-    public static final Dialog<Pair<String,String>> boiteD = new Dialog<>();
     public String auth ="Authentification";
     public String saisie ="Saisir vos données de connexion";
     public String co = "Se connecter";

@@ -474,7 +474,7 @@ CREATE TABLE `RapportVisite` (
 
 LOCK TABLES `RapportVisite` WRITE;
 /*!40000 ALTER TABLE `RapportVisite` DISABLE KEYS */;
-INSERT INTO `RapportVisite` (vis_matricule, rap_num, rap_date_visite,rap_date_redaction ,pra_num, mot_num, rap_coef_confiance) VALUES ('a131',1,'2023/01/10',"2023/01/15",2,4,2),('a17',5,'2022/12/03',"2023/01/02",1,13,4),('a93',1,'2023/01/02',"2023/01/04",4,5,1),('a55',2,'2023/01/22',"2023/02/1",2,11,5);
+INSERT INTO `RapportVisite` (vis_matricule, rap_num, rap_date_visite,rap_date_redaction ,pra_num, mot_num, rap_coef_confiance) VALUES ('a131',1,'2023/01/10',"2023/01/15",2,4,2),('a17',5,'2022/12/03',"2023/01/02",1,3,4),('a93',1,'2023/01/02',"2023/01/04",4,2,1),('a55',2,'2023/01/22',"2023/02/1",2,1,5);
 /*!40000 ALTER TABLE `RapportVisite` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,6 +732,6 @@ SELECT RapportVisite.pra_num, Praticien.pra_nom, Praticien.pra_ville, Praticien.
 
 SELECT vis_matricule ,vis_nom, vis_prenom FROM Visiteur;
 SELECT RapportVisite.vis_matricule, rap_num, rap_date_visite, rap_bilan, pra_num, mot_num, rap_autre_motif, rap_coef_confiance FROM RapportVisite INNER JOIN Visiteur ON RapportVisite.vis_matricule = Visiteur.vis_matricule WHERE RapportVisite.vis_matricule LIKE "a17" AND MONTH(rap_date_visite) = "12";
-UPDATE RapportVisite SET rap_lu = true where vis_matricule LIKE "a131";
+UPDATE RapportVisite SET rap_lu = true WHERE vis_matricule LIKE "a131" AND rap_num = 1;
 
 */

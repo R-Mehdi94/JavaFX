@@ -102,27 +102,41 @@ public class ModeleGsbRv {
 
     }
 
-    public static List<RapportVisite> getRapportVisite(String matricule, String mois) throws ConnexionException {
+    public static List<RapportVisite> getRapportVisite(String matricule, int mois, String annee) throws ConnexionException {
+
         Connection connexion = ConnexionBD.getConnexion();
 
-        String requete = "SELECT rap_num, rap_date_visite, rap_date_redaction, rap_bilan, rap_autre_motif, rap_coef_confiance, rap_lu "
+        String requete = "SELECT RapportVisite.rap_num, RapportVisite.rap_date_visite, RapportVisite.rap_date_redaction, RapportVisite.rap_bilan, RapportVisite.rap_autre_motif, RapportVisite.rap_coef_confiance, RapportVisite.rap_lu, Praticien.pra_num , Praticien.pra_nom, Praticien.pra_ville, Praticien.pra_coefnotoriete, Visiteur.vis_matricule, Visiteur.vis_nom, Visiteur.vis_prenom, Motif.mot_libelle "
                 + "FROM RapportVisite "
                 + "INNER JOIN Visiteur "
                 + "ON RapportVisite.vis_matricule = Visiteur.vis_matricule "
-                + "WHERE RapportVisite.vis_matricule "
-                + "LIKE ? "
-                + "AND MONTH(rap_date_visite) = ? ";
+                + "INNER JOIN Praticien "
+                + "ON RapportVisite.pra_num = Praticien.pra_num "
+                + "INNER JOIN Motif "
+                + "ON RapportVisite.mot_num = Motif.mot_num "
+                + "WHERE Visiteur.vis_matricule LIKE ? "
+                + "AND MONTH(rap_date_visite) = ? "
+                + "AND YEAR(rap_date_visite) = ? ";
 
         try {
+
             PreparedStatement requetePreparee = (PreparedStatement) connexion.prepareStatement(requete);
             requetePreparee.setString(1, matricule);
-            requetePreparee.setString(2, mois);
+            requetePreparee.setInt(2, mois);
+            requetePreparee.setString(3, annee);
+
             ResultSet resultat = requetePreparee.executeQuery();
             List<RapportVisite> listRapportVisite = new ArrayList<>();
             if (resultat.next()) {
-                listRapportVisite.add(new RapportVisite(resultat.getInt("rap_num"), resultat.getDate("rap_date_visite").toLocalDate(), resultat.getDate("rap_date_redaction").toLocalDate(), resultat.getString("rap_bilan"), resultat.getString("rap_autre_motif"), resultat.getInt("rap_coef_confiance"), resultat.getBoolean("rap_lu")));
+
+                Praticien praticien = new Praticien(resultat.getInt("pra_num"), resultat.getString("pra_nom"), resultat.getString("pra_ville"), resultat.getDouble("pra_coefnotoriete"), resultat.getDate("rap_date_visite").toLocalDate(), resultat.getInt("rap_coef_confiance"));
+                Visiteur visiteur = new Visiteur(resultat.getString("vis_matricule"), resultat.getString("vis_nom"), resultat.getString("vis_prenom"));
+
+                listRapportVisite.add(new RapportVisite(resultat.getInt("rap_num"), resultat.getDate("rap_date_visite").toLocalDate(), resultat.getDate("rap_date_redaction").toLocalDate(), resultat.getString("rap_bilan"), resultat.getString("mot_libelle"), resultat.getInt("rap_coef_confiance"), resultat.getBoolean("rap_lu"), visiteur ,praticien));
+
+
                 while (resultat.next()) {
-                    listRapportVisite.add(new RapportVisite(resultat.getInt("rap_num"), resultat.getDate("rap_date_visite").toLocalDate(), resultat.getDate("rap_date_redaction").toLocalDate(), resultat.getString("rap_bilan"), resultat.getString("rap_autre_motif"), resultat.getInt("rap_coef_confiance"), resultat.getBoolean("rap_lu")));
+                    listRapportVisite.add(new RapportVisite(resultat.getInt("rap_num"), resultat.getDate("rap_date_visite").toLocalDate(), resultat.getDate("rap_date_redaction").toLocalDate(), resultat.getString("rap_bilan"), resultat.getString("mot_libelle"), resultat.getInt("rap_coef_confiance"), resultat.getBoolean("rap_lu"), visiteur ,praticien));
                 }
                 return listRapportVisite;
             }
@@ -133,5 +147,32 @@ public class ModeleGsbRv {
         return null;
 
     }
+
+    public static boolean setRapportVisiteLu(String matricule, int numRapport) throws ConnexionException {
+        Connection connexion = ConnexionBD.getConnexion();
+
+        String requete = "UPDATE RapportVisite  "
+                + "SET rap_lu = true "
+                + "WHERE vis_matricule LIKE ? "
+                + "AND rap_num = ? ";
+        try {
+            PreparedStatement requetePreparee = (PreparedStatement) connexion.prepareStatement(requete);
+            requetePreparee.setString(1, matricule);
+            requetePreparee.setInt(2, numRapport);
+            ResultSet resultat = requetePreparee.executeQuery();
+            if(resultat != null){
+                return true;
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+
+
+    }
+
+    // insert RapportVisite(vis_matricule, rap_num, rap_date_visite, rap_date_redaction, pra_num , mot_num , rap_coef_confiance , rap_lu) values("a131",2,"2023-01-11","2023-01-16",2,4,2,0);
 
 }

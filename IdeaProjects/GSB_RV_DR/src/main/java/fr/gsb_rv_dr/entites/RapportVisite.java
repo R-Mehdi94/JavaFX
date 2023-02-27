@@ -1,5 +1,7 @@
 package fr.gsb_rv_dr.entites;
 
+import fr.gsb_rv_dr.vue.VueRapport;
+
 import java.time.LocalDate;
 
 public class RapportVisite {
@@ -23,15 +25,9 @@ public class RapportVisite {
     private Praticien lePraticien;
 
 
-    public RapportVisite(int numero, LocalDate dateVisite, LocalDate dateRedaction, String bilan, String motif, int coefConfiance, boolean lu) {
-        this.numero = numero;
-        this.dateVisite = dateVisite;
-        this.dateRedaction = dateRedaction;
-        this.bilan = bilan;
-        this.motif = motif;
-        this.coefConfiance = coefConfiance;
-        this.lu = lu;
-    }
+    private VueRapport leRapport;
+
+
 
     public RapportVisite(int numero, LocalDate dateVisite, LocalDate dateRedaction, String bilan, String motif, int coefConfiance, boolean lu, Visiteur leVisiteur, Praticien lePraticien) {
         this.numero = numero;
@@ -121,17 +117,7 @@ public class RapportVisite {
 
     @Override
     public String toString() {
-        return "RapportVisite{" +
-                "numero=" + numero +
-                ", dateVisite=" + dateVisite +
-                ", dateRedaction=" + dateRedaction +
-                ", bilan='" + bilan + '\'' +
-                ", motif='" + motif + '\'' +
-                ", coefConfiance=" + coefConfiance +
-                ", lu=" + lu +
-                ", leVisiteur=" + leVisiteur +
-                ", lePraticien=" + lePraticien +
-                '}';
+        return "numero : " + this.getNumero() + "\n dateVisite : " + dateVisite + "\n dateRedaction : " + dateRedaction + "\n bilan : " + bilan + "\n motif : " + motif + "\n coefConfiance : " + coefConfiance + "\n lu : " + lu + "\n LeVisiteur : " + leVisiteur.getMatricule() + " " + leVisiteur .getNom() + "\n LePraticien : " + lePraticien.getNumero() + " " + lePraticien.getNom();
     }
 
 

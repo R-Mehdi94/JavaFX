@@ -39,11 +39,7 @@ public class Visiteur {
 
     @Override
     public String toString() {
-        return "Visiteur{" +
-                "matricule='" + matricule + '\'' +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                '}';
+        return  nom.toUpperCase() + " " + prenom + " " + "(" + matricule + ")" ;
     }
 }
 
